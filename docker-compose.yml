@@ -1,0 +1,40 @@
+services:
+  # Servicio de base de datos PostgreSQL
+  postgres:
+    image: postgres:18
+    container_name: graphql-tickets-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: tickets
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d tickets"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Servicio de migraciones de base de datos
+  migrate:
+    image: migrate/migrate
+    container_name: graphql-tickets-migrate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./migrations:/migrations:ro
+    command:
+      [
+        "-path",
+        "/migrations",
+        "-database",
+        "postgres://postgres:postgres@postgres:5432/tickets?sslmode=disable",
+        "up",
+      ]
+    restart: "no"
+
+volumes:
+  pgdata:

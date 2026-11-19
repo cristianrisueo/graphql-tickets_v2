@@ -1,0 +1,50 @@
+# Esquemas GraphQL que gqlgen fusionará en un único contrato
+schema:
+  - internal/graphql/schema/*.graphqls
+
+# Motor de ejecución generado automáticamente por gqlgen
+exec:
+  filename: internal/graphql/generated/generated.go
+  package: generated
+
+# Modelos auxiliares generados solo si algún tipo no está enlazado a tus dominios
+model:
+  filename: internal/graphql/model/models_gen.go
+  package: model
+
+# Resolvers separados por archivo siguiendo el nombre de cada .graphqls
+resolver:
+  layout: follow-schema
+  dir: internal/graphql/resolver
+  package: resolver
+  filename_template: "{name}.resolvers.go"
+
+# Genera []User y []Ticket en listas no anulables en lugar de []*User y []*Ticket
+omit_slice_element_pointers: true
+
+# Enlaza automáticamente tipos cuyo nombre coincide con el esquema (User, Ticket)
+autobind:
+  - "graphql-tickets-v2/internal/user"
+  - "graphql-tickets-v2/internal/ticket"
+
+# Mapeos explícitos para tipos cuyos nombres difieren entre Go y GraphQL
+models:
+  ID:
+    model:
+      - github.com/99designs/gqlgen/graphql.ID
+  Ticket:
+    fields:
+      assignee:
+        resolver: true
+  TicketStatus:
+    model:
+      - graphql-tickets-v2/internal/graphql/helpers.TicketStatus
+  CreateTicketInput:
+    model:
+      - graphql-tickets-v2/internal/ticket.CreateInput
+  UpdateTicketInput:
+    model:
+      - graphql-tickets-v2/internal/ticket.UpdateInput
+  TicketFilter:
+    model:
+      - graphql-tickets-v2/internal/ticket.ListFilter

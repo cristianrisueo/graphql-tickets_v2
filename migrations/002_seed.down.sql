@@ -1,0 +1,15 @@
+-- Eliminación de los tickets iniciales insertados por el seed
+DELETE FROM tickets WHERE id IN (
+    '01933f20-0000-7000-8000-000000000001',
+    '01933f20-0000-7000-8000-000000000002',
+    '01933f20-0000-7000-8000-000000000003',
+    '01933f20-0000-7000-8000-000000000004',
+    '01933f20-0000-7000-8000-000000000005'
+);
+
+-- Eliminación de los usuarios iniciales insertados por el seed
+DELETE FROM users WHERE id IN (
+    '01933f10-0000-7000-8000-000000000001',
+    '01933f10-0000-7000-8000-000000000002',
+    '01933f10-0000-7000-8000-000000000003'
+);

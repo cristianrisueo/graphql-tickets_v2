@@ -1,0 +1,59 @@
+# Estados posibles dentro del ciclo de vida de un ticket
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+
+# Representa un ticket en el sistema
+type Ticket {
+  id: ID!
+  title: String!
+  description: String
+  status: TicketStatus!
+  assignee: User
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+# Datos de entrada para crear un nuevo ticket (el estado inicial es OPEN)
+input CreateTicketInput {
+  title: String!
+  description: String
+  assigneeId: ID
+}
+
+# Datos opcionales para actualizar un ticket existente
+input UpdateTicketInput {
+  title: String
+  description: String
+  status: TicketStatus
+  assigneeId: ID
+}
+
+# Filtros opcionales para listar tickets
+input TicketFilter {
+  status: TicketStatus
+  assigneeId: ID
+}
+
+# Consultas de tickets
+extend type Query {
+  # Busca un ticket por su identificador único
+  ticket(id: ID!): Ticket
+
+  # Devuelve los tickets aplicando filtros opcionales por estado o usuario asignado
+  tickets(filter: TicketFilter): [Ticket!]!
+}
+
+# Mutaciones de tickets
+extend type Mutation {
+  # Registra un nuevo ticket
+  createTicket(input: CreateTicketInput!): Ticket!
+
+  # Actualiza los campos o el estado de un ticket existente
+  updateTicket(id: ID!, input: UpdateTicketInput!): Ticket!
+
+  # Elimina un ticket por su identificador único
+  deleteTicket(id: ID!): Boolean!
+}

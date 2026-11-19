@@ -1,0 +1,25 @@
+# Escalar soportado de forma nativa por gqlgen (mapea directamente a time.Time en Go)
+scalar Time
+
+# Representa un usuario en el sistema
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  createdAt: Time!
+}
+
+# Consultas de users
+type Query {
+  # Busca un usuario por su identificador único
+  user(id: ID!): User
+
+  # Devuelve todos los usuarios registrados en el sistema
+  users: [User!]!
+}
+
+# Mutaciones de users
+type Mutation {
+  # Registra un nuevo usuario en el sistema
+  createUser(name: String!, email: String!): User!
+}
